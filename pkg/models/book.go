@@ -4,8 +4,9 @@ import (
 	"restapi/pkg/config"
 
 	"gorm.io/gorm"
-	"honnef.co/go/tools/config"
 )
+
+var db *gorm.DB
 
 type Book struct {
 	gorm.Model
@@ -16,6 +17,30 @@ type Book struct {
 
 func init() {
 	config.Connect()
-	db := config.GetDB()
+	db = config.GetDB()
 	db.AutoMigrate(&Book{})
+}
+
+func (b *Book) CreateBook() *Book {
+	// db.NewRecord(b)
+	db.Create(&b)
+	return b
+}
+
+func GetAllBooks() []Book {
+	var books []Book
+	db.Find(&books)
+	return books
+}
+
+func GetBookByID(Id int64) (*Book, *gorm.DB) {
+	var getBook Book
+	d := db.Where("ID/?", Id).Find(&getBook)
+	return &getBook, d
+}
+
+func DeleteBook(Id int64) Book {
+	var deletedBook Book
+	db.Where("ID=?", Id).Delete(&deletedBook)
+	return deletedBook
 }
