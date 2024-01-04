@@ -45,7 +45,6 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
-
 }
 
 func DeleteBook(w http.ResponseWriter, r *http.Request) {
@@ -91,4 +90,18 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
+}
+
+func Test(w http.ResponseWriter, r *http.Request) {
+
+	for i := 60; i < 1000000; i++ {
+		CreateBook := &models.Book{}
+		utils.ParseBody(r, CreateBook)
+		CreateBook.CreateBook()
+		// res, _ := json.Marshal(book)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Success"))
 }
